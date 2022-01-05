@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="depot_name" content="." />
+<meta name="document_id" content="cd3e11b1-3dd1-7a21-6b36-627ab7e77756" />
+<meta name="document_version_independent_id" content="3b37202c-b523-5b0a-419f-62adaeb07e22" />
+<meta name="locale" content="en-us" />
+<meta name="rawTitle" content="<h1 id=&quot;分页查询实现&quot;>分页查询实现</h1>" />
+<meta name="schema" content="Conceptual" />
+<meta name="site_name" content="Docs" />
+<meta name="toc_rel" content="../../toc/" />
+<meta name="updated_at" content="2022-01-05 09:05 AM" />
+<meta name="wordCount" content="564" />
+
+
+	<title>分页查询实现</title>
+
+	<link rel="stylesheet" href="/styles/docfx.vendor.css">
+	<link rel="stylesheet" href="/dist/docfx.css">
+
+	<script type="text/javascript" src="/styles/docfx.vendor.js"></script>
+	<script type="text/javascript" src="/dist/docfx.js"></script>
+</head>
+
+<body data-spy="scroll" data-target="#affix">
+	<div id="wrapper">
+		<header>
+<nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+<a class="navbar-brand" href="/">
+  <img id="logo" class="svg" src="/svg/logo.svg">
+</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <form class="navbar-form navbar-right" role="search" id="search">
+        <div class="form-group">
+          <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+        </div>
+      </form>
+      <div class="switch-theme" title="Switch Theme">
+        <img class="svg hidden light-entrance" src="/svg/sun.svg">
+        <img class="svg hidden dark-entrance" src="/svg/moon.svg">
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="subnav navbar navbar-default">
+  <div class="container hide-when-search" id="breadcrumb">
+    <ul class="breadcrumb">
+      <li></li>
+    </ul>
+  </div>
+</div>
+		</header>
+
+		<div role="main" class="container body-content page-type-conceptual">
+<div class="sidenav hide-when-search">
+  <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+  <div class="sidetoggle collapse" id="sidetoggle">
+    <div id="sidetoc"></div>
+  </div>
+</div>
+			<div class="article row grid-right">
+
+				<div class="col-md-10">
+
+					<article class="content wrap" id="_content" data-uid="">
+						<h1 id="分页查询实现">分页查询实现</h1>
+<ul class="metabar">
+  <li>
+    <time datetime="1/5/2022">1/5/2022</time>
+  </li>
+  <li class="readingTime">2 minutes to read</li>
+</ul>						<p>在定义好了用户<code>User</code>实体后，我们在后台管理的时候需要对用户进行分页查询，这个是在很多地方都需要使用到的，在Gentings中对分页查询也实现了简单化操作。</p>
+<h2 id="分页查询代码">分页查询代码</h2>
+<p>在分页查询中，我们需要定义一个参数类，用于前端参数的接收，同时根据参数实现相应的条件查询，具体代码如下：</p>
+<pre><code class="lang-csharp">    /// &lt;summary&gt;
+    /// 用户查询实例。
+    /// &lt;/summary&gt;
+    public class UserQuery : OrderableQueryBase&lt;User, UserOrderBy&gt;
+    {
+        /// &lt;summary&gt;
+        /// 用户名称。
+        /// &lt;/summary&gt;
+        public string Name { get; set; }
+
+        /// &lt;summary&gt;
+        /// 初始化查询上下文。
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;context&quot;&gt;查询上下文。&lt;/param&gt;
+        protected override void Init(IQueryContext&lt;User&gt; context)
+        {
+            base.Init(context);
+            if (!string.IsNullOrEmpty(Name))
+                context.Where(x =&gt; x.UserName.Contains(Name) || x.NickName.Contains(Name));
+        }
+    }
+</code></pre>
+<h2 id="排序">排序</h2>
+<p>如果使用Gentings集成的后台管理UI，可以很好的实现排序功能，在用户查询中，我们也定义了排序功能，在Gentings中排序需要定义一个枚举，并且这个枚举的值名称必须和数据库中的字段一样，具体代码如下：</p>
+<pre><code class="lang-csharp">    /// &lt;summary&gt;
+    /// 排序。
+    /// &lt;/summary&gt;
+    public enum UserOrderBy
+    {
+        /// &lt;summary&gt;
+        /// 用户名称。
+        /// &lt;/summary&gt;
+        UserName,
+        /// &lt;summary&gt;
+        /// 添加时间。
+        /// &lt;/summary&gt;
+        CreatedDate,
+        /// &lt;summary&gt;
+        /// 更新时间。
+        /// &lt;/summary&gt;
+        UpdatedDate,
+        /// &lt;summary&gt;
+        /// 最后登录时间。
+        /// &lt;/summary&gt;
+        LastLoginDate,
+    }
+</code></pre>
+<h2 id="分页结果">分页结果</h2>
+<p>在分页查询中，我们数据库操作提供了一个<code>Load</code>或者<code>LoadAsync</code>方法，返回的结果为<code>IPageEnumerable&lt;TModel&gt;</code>实例，里面包含了页数，页码，总记录数，每页显示记录数，以及当前页数据列表，具体代码如下：</p>
+<pre><code class="lang-csharp">    /// &lt;summary&gt;
+    /// 分页迭代接口。
+    /// &lt;/summary&gt;
+    public interface IPageEnumerable : IEnumerable
+    {
+        /// &lt;summary&gt;
+        /// 页码。
+        /// &lt;/summary&gt;
+        int PageIndex { get; }
+
+        /// &lt;summary&gt;
+        /// 每页显示记录数。
+        /// &lt;/summary&gt;
+        int PageSize { get; }
+
+        /// &lt;summary&gt;
+        /// 总记录数。
+        /// &lt;/summary&gt;
+        int Size { get; }
+
+        /// &lt;summary&gt;
+        /// 总页数。
+        /// &lt;/summary&gt;
+        int Pages { get; }
+    }
+
+    /// &lt;summary&gt;
+    /// 分页迭代接口。
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name=&quot;TModel&quot;&gt;模型类型。&lt;/typeparam&gt;
+    public interface IPageEnumerable&lt;out TModel&gt; : IPageEnumerable, IEnumerable&lt;TModel&gt;
+    {
+    }
+</code></pre>
+<p>这里只讲简单的实现方式，详细请参考：<a href="../gentings/data/page.md" data-linktype="relative-path">Gentings数据库分页查询</a></p>
+
+					</article>
+
+				</div>
+
+<div class="hidden-sm col-md-2" role="complementary">
+  <div class="sideaffix">
+    <div class="contribution">
+      <ul class="nav">
+      </ul>
+    </div>
+    <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+    </nav>
+  </div>
+</div>
+			</div>
+		</div>
+<footer>
+  <div class="grad-bottom"></div>
+  <div class="footer">
+    <div class="container">
+      <span class="pull-right">
+        <a href="#top">Back to top</a>
+      </span>
+    <span>Copyright © Microsoft.<br>Generated by <strong>DocFX</strong></span>
+    </div>
+  </div>
+</footer>
+	</div>
+</body>
+
+</html>

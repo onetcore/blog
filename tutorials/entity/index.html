@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="depot_name" content="." />
+<meta name="document_id" content="0eb0e72f-35b4-3b2b-ee40-9be141c10fcc" />
+<meta name="document_version_independent_id" content="97c4cc48-1144-3ed0-d58c-9547837d5a71" />
+<meta name="locale" content="en-us" />
+<meta name="rawTitle" content="<h1 id=&quot;定义一个实体类&quot;>定义一个实体类</h1>" />
+<meta name="schema" content="Conceptual" />
+<meta name="site_name" content="Docs" />
+<meta name="toc_rel" content="../../toc/" />
+<meta name="updated_at" content="2022-01-05 09:05 AM" />
+<meta name="wordCount" content="692" />
+
+
+	<title>定义一个实体类</title>
+
+	<link rel="stylesheet" href="/styles/docfx.vendor.css">
+	<link rel="stylesheet" href="/dist/docfx.css">
+
+	<script type="text/javascript" src="/styles/docfx.vendor.js"></script>
+	<script type="text/javascript" src="/dist/docfx.js"></script>
+</head>
+
+<body data-spy="scroll" data-target="#affix">
+	<div id="wrapper">
+		<header>
+<nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+<a class="navbar-brand" href="/">
+  <img id="logo" class="svg" src="/svg/logo.svg">
+</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <form class="navbar-form navbar-right" role="search" id="search">
+        <div class="form-group">
+          <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+        </div>
+      </form>
+      <div class="switch-theme" title="Switch Theme">
+        <img class="svg hidden light-entrance" src="/svg/sun.svg">
+        <img class="svg hidden dark-entrance" src="/svg/moon.svg">
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="subnav navbar navbar-default">
+  <div class="container hide-when-search" id="breadcrumb">
+    <ul class="breadcrumb">
+      <li></li>
+    </ul>
+  </div>
+</div>
+		</header>
+
+		<div role="main" class="container body-content page-type-conceptual">
+<div class="sidenav hide-when-search">
+  <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+  <div class="sidetoggle collapse" id="sidetoggle">
+    <div id="sidetoc"></div>
+  </div>
+</div>
+			<div class="article row grid-right">
+
+				<div class="col-md-10">
+
+					<article class="content wrap" id="_content" data-uid="">
+						<h1 id="定义一个实体类">定义一个实体类</h1>
+<ul class="metabar">
+  <li>
+    <time datetime="1/5/2022">1/5/2022</time>
+  </li>
+  <li class="readingTime">3 minutes to read</li>
+</ul>						<p>在.NET开发中，每一一个表格对应的一个实体类，这是经常使用到的，所以在Gentings中也对实体类进行定义，然后对数据库进行迁移。在Gentings中采用Code First方式来进行开发，如果对数据库不是很熟悉的人员可以不需要了解数据库。在Gentings的数据库模块中已经对数据库操作进行了很友好的封装，具体的可以参考<a href="../gentings/data/index.md" data-linktype="relative-path">数据库模块</a>。</p>
+<h2 id="实体类代码">实体类代码</h2>
+<p>首先我们定义一个用户实体类<code>User</code>，这个在程序中经常用到的，具体代码如下：</p>
+<pre><code class="lang-csharp">    /// &lt;summary&gt;
+    /// 管理员。
+    /// &lt;/summary&gt;
+    [Table(&quot;core_Administrators&quot;)]
+    public class User : ExtendBase, IUser
+    {
+        /// &lt;summary&gt;
+        /// 用户ID。
+        /// &lt;/summary&gt;
+        [Identity]
+        public int Id { get; set; }
+
+        /// &lt;summary&gt;
+        /// 用户名称。
+        /// &lt;/summary&gt;
+        [Size(64)]
+        [NotUpdated]
+        public string? UserName { get; set; }
+
+        /// &lt;summary&gt;
+        /// 密码。
+        /// &lt;/summary&gt;
+        [Size(128)]
+        [NotUpdated]
+        public string? Password { get; set; }
+
+        /// &lt;summary&gt;
+        /// 昵称。
+        /// &lt;/summary&gt;
+        [Size(64)]
+        public string? NickName { get; set; }
+
+        /// &lt;summary&gt;
+        /// 电子邮件。
+        /// &lt;/summary&gt;
+        [Size(256)]
+        public string? Email { get; set; }
+
+        /// &lt;summary&gt;
+        /// 添加时间。
+        /// &lt;/summary&gt;
+        [NotUpdated]
+        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
+
+        /// &lt;summary&gt;
+        /// 最后更新时间。
+        /// &lt;/summary&gt;
+        public DateTimeOffset UpdatedDate { get; set; } = DateTimeOffset.Now;
+
+        /// &lt;summary&gt;
+        /// 最后登录时间。
+        /// &lt;/summary&gt;
+        [NotUpdated]
+        public DateTimeOffset? LastLoginDate { get; set; }
+
+        /// &lt;summary&gt;
+        /// 头像。
+        /// &lt;/summary&gt;
+        [Size(256)]
+        public string Avatar { get; set; } = &quot;/images/avatar.png&quot;;
+
+        /// &lt;summary&gt;
+        /// 登录IP。
+        /// &lt;/summary&gt;
+        [NotUpdated]
+        [Size(20)]
+        public string? LoginIP { get; set; }
+    }
+</code></pre>
+<h2 id="代码解析">代码解析</h2>
+<p>首先要让数据库可操作，这个类的属性必须为公有<code>public</code>，并且具有<code>get</code>和<code>set</code>功能，否则将不被数据库操作识别。一般实体类就是定义和描述一个类型的属性，在代码中，使用到的特性如下：</p>
+<ul>
+<li>TableAttribute：指定数据库中对应的表格名称；</li>
+<li>IdentityAttribute：表示当前<code>Id</code>字段为自增长序列，因为没有特别的指定主键，<code>Id</code>自增长字段自动设置为主键；</li>
+<li>SizeAttribute：表示当前字段在数据库中长度，一般字符串和其他可变长度都需要设置，如果没有设置，在SqlServer数据库中使用<code>MAX</code>，如字符串就为<code>nvarchar(MAX)</code>；</li>
+<li>NotUpdatedAttribute：表示在更新整个实体时候，忽略此字段。</li>
+</ul>
+<p>从上面的代码可以看到，一个实体类包含了属性名称和一些特性的定义，我们这里只介绍用到的一些特性，具体的可以参考：<a href="../gentings/data/attributes.md" data-linktype="relative-path">Gentings实体类特性</a>。</p>
+<blockquote>
+<p>注：如果没有特殊的命名，我们约定添加时间属性为<code>CreatedDate</code>，更新时间为<code>UpdatedDate</code>。</p>
+</blockquote>
+
+					</article>
+
+				</div>
+
+<div class="hidden-sm col-md-2" role="complementary">
+  <div class="sideaffix">
+    <div class="contribution">
+      <ul class="nav">
+      </ul>
+    </div>
+    <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+    </nav>
+  </div>
+</div>
+			</div>
+		</div>
+<footer>
+  <div class="grad-bottom"></div>
+  <div class="footer">
+    <div class="container">
+      <span class="pull-right">
+        <a href="#top">Back to top</a>
+      </span>
+    <span>Copyright © Microsoft.<br>Generated by <strong>DocFX</strong></span>
+    </div>
+  </div>
+</footer>
+	</div>
+</body>
+
+</html>

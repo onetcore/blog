@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="depot_name" content="." />
+<meta name="document_id" content="a2b0d2e9-8d73-02c1-752a-9fca168d0170" />
+<meta name="document_version_independent_id" content="e31eae91-43df-e742-8e1a-51d0e42d1697" />
+<meta name="locale" content="en-us" />
+<meta name="rawTitle" content="<h1 id=&quot;定义管理接口和实现类&quot;>定义管理接口和实现类</h1>" />
+<meta name="schema" content="Conceptual" />
+<meta name="site_name" content="Docs" />
+<meta name="toc_rel" content="../../toc/" />
+<meta name="updated_at" content="2022-01-05 09:05 AM" />
+<meta name="wordCount" content="720" />
+
+
+	<title>定义管理接口和实现类</title>
+
+	<link rel="stylesheet" href="/styles/docfx.vendor.css">
+	<link rel="stylesheet" href="/dist/docfx.css">
+
+	<script type="text/javascript" src="/styles/docfx.vendor.js"></script>
+	<script type="text/javascript" src="/dist/docfx.js"></script>
+</head>
+
+<body data-spy="scroll" data-target="#affix">
+	<div id="wrapper">
+		<header>
+<nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+<a class="navbar-brand" href="/">
+  <img id="logo" class="svg" src="/svg/logo.svg">
+</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <form class="navbar-form navbar-right" role="search" id="search">
+        <div class="form-group">
+          <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+        </div>
+      </form>
+      <div class="switch-theme" title="Switch Theme">
+        <img class="svg hidden light-entrance" src="/svg/sun.svg">
+        <img class="svg hidden dark-entrance" src="/svg/moon.svg">
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="subnav navbar navbar-default">
+  <div class="container hide-when-search" id="breadcrumb">
+    <ul class="breadcrumb">
+      <li></li>
+    </ul>
+  </div>
+</div>
+		</header>
+
+		<div role="main" class="container body-content page-type-conceptual">
+<div class="sidenav hide-when-search">
+  <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+  <div class="sidetoggle collapse" id="sidetoggle">
+    <div id="sidetoc"></div>
+  </div>
+</div>
+			<div class="article row grid-right">
+
+				<div class="col-md-10">
+
+					<article class="content wrap" id="_content" data-uid="">
+						<h1 id="定义管理接口和实现类">定义管理接口和实现类</h1>
+<ul class="metabar">
+  <li>
+    <time datetime="1/5/2022">1/5/2022</time>
+  </li>
+  <li class="readingTime">3 minutes to read</li>
+</ul>						<p>我们已经定了实体类，并且创建了数据库，现在我们需要在代码中使用这个类，在.NET6+中，我们需要创建一个接口<code>IUserManager</code>，以及接口实现类<code>UserManager</code>，然后注册到服务容器中，在进行调用，这些是.NET6+的基础操作方式，对于不熟悉这种开发方式的人，可以详细了解<a href="https://docs.microsoft.com/dotnet" data-linktype="external">微软的文档</a>。</p>
+<h2 id="定义接口iusermanager">定义接口IUserManager</h2>
+<p>因为<code>User</code>继承了<code>IIdObject</code>接口，在Gentings中封装好了很多带有主键<code>Id</code>的数据库操作方法，所以接口我们就可以继承而来，这样对于所有具有单主键<code>Id</code>的对象快速实现管理类。</p>
+<pre><code class="lang-csharp">    /// &lt;summary&gt;
+    /// 管理员管理接口。
+    /// &lt;/summary&gt;
+    public interface IUserManager : IObjectManager&lt;User&gt;, IUserService
+    {
+        /// &lt;summary&gt;
+        /// 获取当前登录用户。
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;返回当前登录用户。&lt;/returns&gt;
+        User GetUser();
+
+        /// &lt;summary&gt;
+        /// 刷新用户缓存。
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;用户Id。&lt;/param&gt;
+        void Refresh(int id);
+    }
+</code></pre>
+<h2 id="实现类usermanager">实现类UserManager</h2>
+<pre><code class="lang-csharp">    /// &lt;summary&gt;
+    /// 管理员管理实现类。
+    /// &lt;/summary&gt;
+    public class UserManager : ObjectManager&lt;User&gt;, IUserManager
+    {
+        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IMemoryCache _cache;
+
+        /// &lt;summary&gt;
+        /// 初始化类&lt;see cref=&quot;User&quot;/&gt;。
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;context&quot;&gt;数据库操作接口实例。&lt;/param&gt;
+        /// &lt;param name=&quot;contextAccessor&quot;&gt;HTTP上下文访问实例。&lt;/param&gt;
+        /// &lt;param name=&quot;cache&quot;&gt;缓存接口实例。&lt;/param&gt;
+        public UserManager(IDbContext&lt;User&gt; context, IHttpContextAccessor contextAccessor, IMemoryCache cache) : base(context)
+        {
+            _contextAccessor = contextAccessor;
+            _cache = cache;
+        }
+
+        private string GetCacheKey(int id)
+        {
+            return $&quot;users:{id}&quot;;
+        }
+
+        /// &lt;summary&gt;
+        /// 获取缓存用户实例。
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;用户Id。&lt;/param&gt;
+        /// &lt;returns&gt;返回缓存用户实例对象。&lt;/returns&gt;
+        public IUser GetCachedUser(int id)
+        {
+            return _cache.GetOrCreate(GetCacheKey(id), ctx =&gt;
+            {
+                ctx.SetDefaultAbsoluteExpiration();
+                return Find(id);
+            });
+        }
+
+        /// &lt;summary&gt;
+        /// 获取缓存用户实例。
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;用户Id。&lt;/param&gt;
+        /// &lt;returns&gt;返回缓存用户实例对象。&lt;/returns&gt;
+        public async Task&lt;IUser&gt; GetCachedUserAsync(int id)
+        {
+            return await _cache.GetOrCreateAsync(GetCacheKey(id), async ctx =&gt;
+            {
+                ctx.SetDefaultAbsoluteExpiration();
+                return await FindAsync(id);
+            });
+        }
+
+        /// &lt;summary&gt;
+        /// 获取当前登录用户。
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;返回当前登录用户。&lt;/returns&gt;
+        public User GetUser()
+        {
+            if (_contextAccessor.HttpContext == null)
+                return new User();
+            return Find(_contextAccessor.HttpContext.User.GetUserId());
+        }
+
+        /// &lt;summary&gt;
+        /// 判断是否重复。
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;model&quot;&gt;模型实例对象。&lt;/param&gt;
+        /// &lt;returns&gt;返回判断结果。&lt;/returns&gt;
+        public override bool IsDuplicated(User model)
+        {
+            return Context.Any(x =&gt; (x.UserName == model.UserName || x.NickName == model.NickName) &amp;&amp; x.Id != model.Id);
+        }
+
+        /// &lt;summary&gt;
+        /// 判断是否重复。
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;model&quot;&gt;模型实例对象。&lt;/param&gt;
+        /// &lt;returns&gt;返回判断结果。&lt;/returns&gt;
+        /// &lt;param name=&quot;cancellationToken&quot;&gt;取消标识。&lt;/param&gt;
+        public override Task&lt;bool&gt; IsDuplicatedAsync(User model, CancellationToken cancellationToken = default)
+        {
+            return Context.AnyAsync(x =&gt; (x.UserName == model.UserName || x.NickName == model.NickName) &amp;&amp; x.Id != model.Id, cancellationToken);
+        }
+
+        /// &lt;summary&gt;
+        /// 刷新用户缓存。
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;用户Id。&lt;/param&gt;
+        public void Refresh(int id)
+        {
+            _cache.Remove(GetCacheKey(id));
+        }
+    }
+</code></pre>
+<p>这样我们就定义好了接口和实现类型，在其他代码中就可以在构造函数中调用<code>IUserManager</code>接口了，详细扩展请参考：<a href="../gentings/data/idobject.md" data-linktype="relative-path">Gentings单Id主键对象扩展查询</a></p>
+
+					</article>
+
+				</div>
+
+<div class="hidden-sm col-md-2" role="complementary">
+  <div class="sideaffix">
+    <div class="contribution">
+      <ul class="nav">
+      </ul>
+    </div>
+    <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+    </nav>
+  </div>
+</div>
+			</div>
+		</div>
+<footer>
+  <div class="grad-bottom"></div>
+  <div class="footer">
+    <div class="container">
+      <span class="pull-right">
+        <a href="#top">Back to top</a>
+      </span>
+    <span>Copyright © Microsoft.<br>Generated by <strong>DocFX</strong></span>
+    </div>
+  </div>
+</footer>
+	</div>
+</body>
+
+</html>

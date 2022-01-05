@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="depot_name" content="." />
+<meta name="document_id" content="c115ee68-f136-8518-0a52-d614ddd68b18" />
+<meta name="document_version_independent_id" content="c115ee68-f136-8518-0a52-d614ddd68b18" />
+<meta name="locale" content="en-us" />
+<meta name="rawTitle" content="<h1 id=&quot;欢迎使用gentings&quot;>欢迎使用Gentings!</h1>" />
+<meta name="schema" content="Conceptual" />
+<meta name="site_name" content="Docs" />
+<meta name="toc_rel" content="toc/" />
+<meta name="updated_at" content="2022-01-05 09:05 AM" />
+<meta name="wordCount" content="600" />
+
+
+	<title>首页</title>
+
+	<link rel="stylesheet" href="/styles/docfx.vendor.css">
+	<link rel="stylesheet" href="/dist/docfx.css">
+
+	<script type="text/javascript" src="/styles/docfx.vendor.js"></script>
+	<script type="text/javascript" src="/dist/docfx.js"></script>
+</head>
+
+<body data-spy="scroll" data-target="#affix">
+	<div id="wrapper">
+		<header>
+<nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+<a class="navbar-brand" href="/">
+  <img id="logo" class="svg" src="/svg/logo.svg">
+</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <form class="navbar-form navbar-right" role="search" id="search">
+        <div class="form-group">
+          <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+        </div>
+      </form>
+      <div class="switch-theme" title="Switch Theme">
+        <img class="svg hidden light-entrance" src="/svg/sun.svg">
+        <img class="svg hidden dark-entrance" src="/svg/moon.svg">
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="subnav navbar navbar-default">
+  <div class="container hide-when-search" id="breadcrumb">
+    <ul class="breadcrumb">
+      <li></li>
+    </ul>
+  </div>
+</div>
+		</header>
+
+		<div role="main" class="container body-content page-type-conceptual">
+<div class="sidenav hide-when-search">
+  <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+  <div class="sidetoggle collapse" id="sidetoggle">
+    <div id="sidetoc"></div>
+  </div>
+</div>
+			<div class="article row grid-right">
+
+				<div class="col-md-10">
+
+					<article class="content wrap" id="_content" data-uid="">
+						<h1 id="欢迎使用gentings">欢迎使用Gentings!</h1>
+<ul class="metabar">
+  <li>
+    <time datetime="1/5/2022">1/5/2022</time>
+  </li>
+  <li class="readingTime">3 minutes to read</li>
+</ul>						<p>欢迎使用Gentings框架进行基于.NET6+快速开发，本框架集成了很多业务快速开放模块，以及数据库等等操作底层模块。</p>
+<p>所有程序集分为业务逻辑以及前端管理RazorUI库程序集，如果使用Razor Pages进行项目后台管理操作，还集成了基于Bootstrap，jQuery库的后台管理UI，以及各种标签类。</p>
+<h2 id="主要功能模块">主要功能模块</h2>
+<ol>
+<li><p>Gentings：核心模块</p>
+</li>
+<li><p>Gentings.Data.SqlServer：SqlServer数据库操作模块</p>
+</li>
+<li><p>Gentings.Extensions：业务逻辑扩展模块</p>
+</li>
+<li><p>Gentings.Saas：支持Saas业务逻辑模块</p>
+</li>
+<li><p>Gentings.Storages：文档存储，Excel等等文件操作模块</p>
+</li>
+<li><p>Gentings.RabbitMQ：RabbitMQ队列集成模块</p>
+</li>
+<li><p>Gentings.Security：基于Identity验证用户模块</p>
+</li>
+<li><p>Gentings.AspNetCore：使用Razor Pages开发辅助模块，提供了前端库集成等等，主要包含如下后台管理库</p>
+<ul>
+<li>Gentings.AspNetCore.Task：后台计划任务管理模块</li>
+<li>Gentings.AspNetCore.Storages：文件存储管理模块</li>
+<li>Gentings.AspNetCore.SensitiveWords：敏感词汇管理模块</li>
+<li>Gentings.AspNetCore.NamedStrings：字典管理模块</li>
+<li>Gentings.AspNetCore.Emails：邮件管理模块</li>
+<li>Gentings.AspNetCore.Events：事件管理模块</li>
+<li>Gentings.AspNetCore.OpenServices：开放平台服务管理模块</li>
+</ul>
+</li>
+<li><p>Gentings.Utilities：其他有用的集成模块</p>
+</li>
+</ol>
+<h2 id="项目结构">项目结构</h2>
+<p>基于Gentings开发的项目结构，建议使用如下的项目结构:</p>
+<p>├──Project(项目文件夹)</p>
+<p>│    ├── Project</p>
+<p>│    ├── Project.Extensions</p>
+<p>│    └── Project.Extensions.*</p>
+<p>├──Gentings(框架文件夹)</p>
+<p>│    ├── Gentings</p>
+<p>│    ├── Gentings.Data.SqlServer</p>
+<p>│    ├── Gentings.AspNetCore</p>
+<p>│    ├── Gentings.AspNetCore.*</p>
+<p>│    ├── Gentings.Extensions</p>
+<p>│    ├── Gentings.Storages</p>
+<p>│    └── ...</p>
+<p>├──Tests(测试文件夹)</p>
+<p>│    ├── Project.Tests</p>
+<p>│    ├── Project.Extensions.Tests</p>
+<p>│    └── Project.Extensions.*.Tests</p>
+<p>└── Others(其他文件夹)</p>
+<h2 id="物理文件夹结构">物理文件夹结构</h2>
+<p>源代码根目录(Repos)</p>
+<p>├──Project(项目文件夹)</p>
+<p>├──Gentings(框架文件夹)</p>
+<p>└── Others(其他文件夹)</p>
+<p>使用上面目录树结构进行开发的优势，可以通过git更新到最新的Gentings程序集，当然在Project项目中忽略掉Gentings目录即可，这样Gentings框架和项目源代码比较独立。如果选择特定版本的Gentings，可以通过git克隆相应的版本。</p>
+<h2 id="库地址">库地址</h2>
+<ul>
+<li><a href="https://gitee.com/ydcl/gentings" data-linktype="external">gitee</a></li>
+<li><a href="https://github.com/onetcore/gentings" data-linktype="external">github</a></li>
+</ul>
+<blockquote>
+<p>注意，所有基于.NET6+开发的都可以使用本框架，默认后台不建议前后端分离，直接使用集成的Razor Pages开发，也可以使用MVC进行开发，如果没有特别说明，本文档使用的为后端RazorPages开发。</p>
+</blockquote>
+
+					</article>
+
+				</div>
+
+<div class="hidden-sm col-md-2" role="complementary">
+  <div class="sideaffix">
+    <div class="contribution">
+      <ul class="nav">
+      </ul>
+    </div>
+    <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+    </nav>
+  </div>
+</div>
+			</div>
+		</div>
+<footer>
+  <div class="grad-bottom"></div>
+  <div class="footer">
+    <div class="container">
+      <span class="pull-right">
+        <a href="#top">Back to top</a>
+      </span>
+    <span>Copyright © Microsoft.<br>Generated by <strong>DocFX</strong></span>
+    </div>
+  </div>
+</footer>
+	</div>
+</body>
+
+</html>

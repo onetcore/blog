@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="depot_name" content="." />
+<meta name="document_id" content="88b4f704-bc0d-76be-5fdc-56e7c4e5b06a" />
+<meta name="document_version_independent_id" content="88b4f704-bc0d-76be-5fdc-56e7c4e5b06a" />
+<meta name="locale" content="en-us" />
+<meta name="rawTitle" content="<h1 id=&quot;新建项目添加服务&quot;>新建项目添加服务</h1>" />
+<meta name="schema" content="Conceptual" />
+<meta name="site_name" content="Docs" />
+<meta name="toc_rel" content="../toc/" />
+<meta name="updated_at" content="2022-01-05 09:05 AM" />
+<meta name="wordCount" content="315" />
+
+
+	<title>新建项目添加服务</title>
+
+	<link rel="stylesheet" href="/styles/docfx.vendor.css">
+	<link rel="stylesheet" href="/dist/docfx.css">
+
+	<script type="text/javascript" src="/styles/docfx.vendor.js"></script>
+	<script type="text/javascript" src="/dist/docfx.js"></script>
+</head>
+
+<body data-spy="scroll" data-target="#affix">
+	<div id="wrapper">
+		<header>
+<nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+<a class="navbar-brand" href="/">
+  <img id="logo" class="svg" src="/svg/logo.svg">
+</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <form class="navbar-form navbar-right" role="search" id="search">
+        <div class="form-group">
+          <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+        </div>
+      </form>
+      <div class="switch-theme" title="Switch Theme">
+        <img class="svg hidden light-entrance" src="/svg/sun.svg">
+        <img class="svg hidden dark-entrance" src="/svg/moon.svg">
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="subnav navbar navbar-default">
+  <div class="container hide-when-search" id="breadcrumb">
+    <ul class="breadcrumb">
+      <li></li>
+    </ul>
+  </div>
+</div>
+		</header>
+
+		<div role="main" class="container body-content page-type-conceptual">
+<div class="sidenav hide-when-search">
+  <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+  <div class="sidetoggle collapse" id="sidetoggle">
+    <div id="sidetoc"></div>
+  </div>
+</div>
+			<div class="article row grid-right">
+
+				<div class="col-md-10">
+
+					<article class="content wrap" id="_content" data-uid="">
+						<h1 id="新建项目添加服务">新建项目添加服务</h1>
+<ul class="metabar">
+  <li>
+    <time datetime="1/5/2022">1/5/2022</time>
+  </li>
+  <li class="readingTime">2 minutes to read</li>
+</ul>						<p>在.NET开发中，要使用Gentings框架，需要按照前面介绍的项目结构，以及目录结构，将<code>Gentings</code>程序集引用到项目当中，并且在项目启动程序<code>Program.cs</code>文件中注册服务和管道。</p>
+<h2 id="注册服务">注册服务</h2>
+<p>一般我们会在程序启动的时候将我们项目中使用到的接口实现组件注册到服务中，在Gentings中也一样，代码很简单：</p>
+<pre><code class="lang-csharp">using Gentings;
+using Gentings.AspNetCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddGentings(builder.Configuration);
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler(&quot;/Error&quot;);
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseGentings(builder.Configuration);
+app.MapRazorPages();
+app.MapControllers();
+app.Run();
+</code></pre>
+<h2 id="代码解析">代码解析</h2>
+<p>在代码中我们可以看到添加了代码：</p>
+<pre><code class="lang-csharp">// Add services to the container.
+builder.Services.AddGentings(builder.Configuration);
+</code></pre>
+<p>以及在授权验证后面添加了代码：</p>
+<pre><code class="lang-csharp">app.UseGentings(builder.Configuration);
+</code></pre>
+<p>这样就可以实现Gentings自带的服务注册系统运行起来，其中包括了后台任务等等，通常我们还会在这个地方添加数据库。</p>
+<blockquote>
+<p>注：如果没有特殊说明，在本文档中的例子和代码就是Gentings项目的的GS项目中的代码。</p>
+</blockquote>
+
+					</article>
+
+				</div>
+
+<div class="hidden-sm col-md-2" role="complementary">
+  <div class="sideaffix">
+    <div class="contribution">
+      <ul class="nav">
+      </ul>
+    </div>
+    <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+    </nav>
+  </div>
+</div>
+			</div>
+		</div>
+<footer>
+  <div class="grad-bottom"></div>
+  <div class="footer">
+    <div class="container">
+      <span class="pull-right">
+        <a href="#top">Back to top</a>
+      </span>
+    <span>Copyright © Microsoft.<br>Generated by <strong>DocFX</strong></span>
+    </div>
+  </div>
+</footer>
+	</div>
+</body>
+
+</html>
